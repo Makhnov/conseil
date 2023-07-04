@@ -1,8 +1,18 @@
+#User & Mdp Base de données
 config.php
+
+#Modules Node.js
 /node_modules/
+
+#Fichiers compilés
+/assets/
+
+#Fichiers de configuration
 /divers/
-/assets/images/
-/assets/font/
-/img/
+
+#Polices
 /fonts/
+
+#fichiers images
+/img/
 /svg/
