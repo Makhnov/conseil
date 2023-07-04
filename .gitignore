@@ -7,6 +7,9 @@ config.php
 #Fichiers compilés
 /assets/
 
+#Ancien fichiers
+/conseil/
+
 #Fichiers de configuration
 /divers/
 
