@@ -1,0 +1,123 @@
+header {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    height: 100px;
+    width: 100vw;
+    background-color: lightblue;
+    box-sizing: border-box;
+    border-bottom: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //p {}
+}
+
+body.accueil header {
+    display: none;
+}
+
+//HEADER PC
+html body.personnage header {
+    padding: 0;
+    height: 8vh;
+    width: 96vw;
+    margin: auto;
+    margin-bottom: 2vh;
+    flex: none;
+
+    nav {
+        position: relative;
+        width: calc(100% - 20px);
+        padding: 0 10px !important;
+        background-color: antiquewhite;
+        height: 100%;
+        backface-visibility: hidden;
+        transition: transform 1.5s;
+        display: flex;
+        column-gap: 10px;
+        box-shadow: 0 0 5px 5px black inset;
+    }
+
+    nav:first-child {
+        top: 0;
+        z-index: 2;
+        transform: rotateX(0deg);
+
+        #retour {
+            display: block;
+            justify-self: flex-start;
+            align-self: center;
+            background-image: url('../../divers/img/logoDnd.png');
+            background-repeat: no-repeat;
+            background-position: 10px center;
+            background-size: contain;
+            overflow: visible;
+            min-height: 80%;
+            width: 100%;
+        }
+    }
+
+    nav:last-child {
+        position: relative;
+        top: calc(-8vh);
+        transform: rotateX(180deg);
+
+        #edition {
+            all: initial;
+            align-self: center;
+            visibility: hidden;
+            height: 80%;
+            width: clamp(70px, 15vw, 150px);
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: clamp(.9rem, 2vw, 2rem);
+            cursor: pointer;
+            background: rgba(0, 128, 0, 0.25);
+        }
+
+        #edition:hover {
+            filter: brightness(1.5);
+            text-shadow: 0.5px 0.25px 0px black;
+        }
+
+        #validation {
+            all: initial;
+            align-self: center;
+            opacity: 0;
+            justify-self: end;
+            height: 80%;
+            width: clamp(70px, 15vw, 150px);
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: clamp(.9rem, 2vw, 2rem);
+            cursor: pointer;
+            background: rgba(0, 128, 0, 0.25);
+        }
+
+        #validation:hover {
+            filter: brightness(1.5);
+            text-shadow: 0.5px 0.25px 0px black;
+        }
+    }
+}
+
+//HEADER MOBILE PORTRAIT
+@media all and (max-width: 1000px) {
+    body:not(.accueil) header {
+        padding: 0 !important;
+        height: 8vh !important;
+        width: 96vw !important;
+    }
+}
+
+//HEADER MOBILE PAYSAGE
+@media all and (max-width: 1000px) and (orientation: landscape) {
+    body:not(.accueil) header {
+        padding: 0 !important;
+        height: 8vh !important;
+        width: 96vw !important;
+    }
+}

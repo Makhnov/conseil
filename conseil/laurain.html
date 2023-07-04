@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <title>Membres du conseil</title>
+
+    <meta name="author" content="Nico M">
+    <meta name="description" content="Site JDR ULUF">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" type="image/x-icon" href="../../divers/img/favdnd.ico">
+
+</head>
+
+<body onload="getBdd(6)" class="bodyProfil">
+
+    <header>
+        <nav>
+            <a href="../index.html" id="retour"></a>
+        </nav>
+        <nav>
+                <button id="validation" type="button" onclick="validation()">Valider</button>
+                <button id="edition" type="button" onclick="edition()">Editer</button>
+        </nav>
+    </header>
+
+    <form method="GET" action="../index2.php">
+        <textarea id="inputText" name="description"></textarea>                
+        <input type="text" name="id" value="9">
+        <input id ="validationPhp" type="submit" value="Valider">
+    </form>
+
+    <div id="sceneProfil">
+        
+        <h1></h1>
+
+		<div id="localiteFonctions">
+			<h2></h2>
+    	    <h3></h3>
+		</div>
+
+        <p></p>
+
+        <img id="infosModif" src="../../divers/img/info.png" alt="informations">
+        <button id="modifier" type="button" onclick="edition()">Modifier la description</button>
+		<div id="bgConseil"></div>
+        <div id="imageConseil" onclick="fullscreenCharacter()"></div>
+
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
