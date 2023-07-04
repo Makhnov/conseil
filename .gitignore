@@ -1,3 +1,8 @@
 config.php
 /node_modules/
 /divers/
+/assets/images/
+/assets/font/
+/img/
+/fonts/
+/svg/
