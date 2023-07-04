@@ -1,8 +1,10 @@
-@use "variables" as *;
-@use "polices";
-@use "body";
-@use "header";
-@use "footer";
-@use "accueil";
-@use "emplacement";
-@use "conseil";
+@use 'sass:color';
+
+@import "variables";
+@import "polices";
+@import "body";
+@import "header";
+@import "footer";
+@import "accueil";
+@import "emplacement";
+@import "conseil";
