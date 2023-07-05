@@ -6,19 +6,19 @@ function assets($asset, $class) {
             echo '<link rel="stylesheet" href="' . get_url('/assets/main.css">');
             break;
         case 'js':
-            echo '<script src="' . get_url('/assets/main.bundle.js"></script>');
+            echo '<script src="' . get_url('/assets/main.bundle.js') . '"></script>';
             switch ($class) {
                 case 'accueil':
-                    echo '<script src="' . get_url('/assets/accueil.bundle.js"></script>');
+                    echo '<script src="' . get_url('/assets/accueil.bundle.js') . '"></script>';
                     break;
                 case 'localite':
-                    //echo '<script src="' . get_url('/assets/main.conseil.js"></script>');
+                    //echo '<script src="' . get_url('/assets/main.conseil.js') . '"></script>';
                     break;
                 case 'emplacement':
-                    echo '<script src="' . get_url('/assets/conseil.bundle.js"></script>');
+                    echo '<script src="' . get_url('/assets/conseil.bundle.js') . '"></script>';
                     break;
                 case 'annexe':
-                    echo '<script src="' . get_url('/assets/annexe.bundle.js"></script>');
+                    echo '<script src="' . get_url('/assets/annexe.bundle.js') . '"></script>';
                     break;
                 default:
                     // Cas par défaut si aucun asset correspondant n'est spécifié
@@ -52,14 +52,15 @@ function tab_localite($tab) {
 function get_url($str) {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     //echo $protocol;
-    //echo '<br>';
     $host = $_SERVER['HTTP_HOST'];
     //echo $host;
-    //echo '<br>';
-    $path = absolutePath(rtrim(dirname($_SERVER['PHP_SELF']), '/'));
-    //echo $path;
-    //echo '<br>';
-    $url = $protocol . $host . $path . $str;
+    if ($str === 'base') {
+        $url = $protocol . $host;
+    } else {
+        $path = absolutePath(rtrim(dirname($_SERVER['PHP_SELF']), '/'));
+        //echo $path;
+        $url = $protocol . $host . $path . $str;
+    }
     return $url;
 }
 

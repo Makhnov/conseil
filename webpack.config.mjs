@@ -14,7 +14,7 @@ let config = {
         style: "./css/main.scss",
         main: ["./js/main.js", "./js/classes.js"],
         accueil: "./js/accueil.js",
-        conseil: "./js/conseil.js",
+        conseil: ["./js/conseil.js", "./js/persos.css.js"],
         annexe: "./js/annexe.js",
     },
     output: {

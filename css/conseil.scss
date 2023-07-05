@@ -32,13 +32,13 @@ body.emplacement main {
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
-        transform-origin: bottom center;
 
         &:hover {
             filter: brightness(2);
         }
     }
-
+}
+    /*
     // Les personnages sont positionnés uniquement avec des % afin de permettre une adaptativité totale
     .adhemar {
         background-image: url("../../divers/img/personnages/conseil/adhemarMin.png");
@@ -210,4 +210,4 @@ body.emplacement main {
             transform: scale(1.1);
         }
     }
-}
+*/

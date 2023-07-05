@@ -27,14 +27,96 @@
     
     function afficher_personnages($id = null, $attr = null) {
         $personnages = get_personnages($id, $attr);
+        $stockageImages = '/jdr/img/personnages/';
+        $imgDiv = get_url('base') . $stockageImages;
+
+        echo '<script>';
+        echo 'const personnages = ' . json_encode($personnages) . ';';
+        echo '</script>';
+
         foreach ($personnages as $personnage) {
+            $id = $personnage['id'];
             $nom = $personnage['nom'];
+            $classes = get_css($nom);
+
             $url = get_url('/personnage/' . urlencode(strtolower($nom)));
+            //var_dump($personnages);
+            //echo '<br>';
+            $data = $personnage['position'];
+            //var_dump($data);
+            //echo '<br>';
+            $urlImage = $data['image'];
+            //print_r($classes);
+            //echo '<br>';
+            $image = str_replace('../', $imgDiv, $urlImage);
+            //print_r($image);
+            //echo '<br>';
+            $hover = str_replace('Min', 'Hover', $image);
+            //print_r($hover);
+            //echo '<br>';
+            $classes_css = str_replace(' ', '.', $classes);
+            //print_r($classes_css);
+            //echo '<br>';
+
+            $dataCSS = [
+                'classe' => $classes_css,
+                'image' => $image,
+                'imageHover' => $hover,
+                'top' => $data['top'],
+                'left' => $data['left'],
+                'height' => $data['height'],
+                'width' => $data['width'],
+                'scaling' => $data['scaling'],
+                'zIndex' => $data['zIndex'],
+            ];
+
+            $codeCSS = "
+                .{$dataCSS['classe']} {
+                    background-image: {$dataCSS['image']};
+                    top: {$dataCSS['top']}%;
+                    left: {$dataCSS['left']}%;
+                    width: calc({$dataCSS['width']} * 50px);
+                    height: calc({$dataCSS['height']} * 80px);
+                    z-index: {$dataCSS['zIndex']};
+                }
         
+                .{$dataCSS['classe']}:hover {
+                    background-image: {$dataCSS['imageHover']};
+                    transform: scale({$dataCSS['scaling']});
+                }
+            ";
+
             echo '<a href="' . $url . '">';
-            echo '<div class="' . get_css($nom) . '">' . $nom . '</div>';
+            echo "<style>{$codeCSS}</style>";
+            echo '<div id="' . $id . '" class="' . $classes . '"></div>';
             echo '</a>';
         }
+    }
+
+    function css_personnages() {
+
+        /*
+        foreach($persosDivs as $id => $div) {       
+
+        
+            $codeCSS = "
+                .{$dataCSS['classe']} {
+                    background-image: url('{$dataCSS['image']}');
+                    top: {$dataCSS['top']}%;
+                    left: {$dataCSS['left']}%;
+                    width: calc({$dataCSS['width']} * 50px);
+                    height: calc({$dataCSS['height']} * 80px);
+                    z-index: {$dataCSS['zIndex']};
+                }
+        
+                .{$dataCSS['classe']}:hover {
+                    background-image: url('{$dataCSS['imageHover']}');
+                    transform: scale({$dataCSS['scaling']});
+                }
+            ";
+            
+            echo "<style>{$codeCSS}</style>";
+        }*/
     }  
 
     function afficher_region($region, $position_id, $children) {

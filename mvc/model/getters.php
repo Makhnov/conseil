@@ -54,9 +54,9 @@
             array_push($personnages, $personnage);
         }
 
-        // Retourner le tableau des personnages
         return $personnages;
     }
+
 
     function get_regions() {
         $db = connect();
