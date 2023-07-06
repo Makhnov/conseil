@@ -14,7 +14,7 @@ include(__DIR__ . '/vues.php');
 get_header($class);
 ?>
     <main class="content">
-
+        
         <section class="utilitaires">
             <div class="bordure">
                 <svg xmlns="http://www.w3.org/2000/svg" width="2550" height="1650" viewBox="0 0 10200 6600">
@@ -91,15 +91,6 @@ get_header($class);
             </div>
         </section>
 
-        <section class="container">
-            <div class="feerune">
-                <img id="background" src="./img/lowRes.jpg" alt="Image légère">
-                <svg id="data" xmlns="http://www.w3.org/2000/svg" width="2550" height="1650" viewBox="0 0 10200 6600">
-                <?php afficher_regions() ?>
-                </svg>
-            </div>
-        </section>
-
         <section class="informations">
             <div class="bordure">
                 <div id="infos">
@@ -131,6 +122,17 @@ get_header($class);
                     <p class="lien eng">wiki eng: <br><a href="https://www.google.com" target="_blank">Lien vers google.com</a></p>
                 </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="tooltip">TOOLTIP</section>
+
+        <section class="container">
+            <div class="feerune">
+                <img id="background" src="./img/lowRes.jpg" alt="Image légère">
+                <svg id="data" xmlns="http://www.w3.org/2000/svg" width="2550" height="1650" viewBox="0 0 10200 6600">
+                <?php afficher_regions() ?>
+                </svg>
             </div>
         </section>
 

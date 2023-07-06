@@ -1,6 +1,6 @@
 console.log('main.js');
-let space = " ";
-let br = "\n";
+const SPACE = " ";
+const BR = "\n";
 
 window.toClass = function (str) { // Remplace une chaine de caractère par une chaine équivalente utilisable en tant que classe css
     // Enlever les accents et convertir en minuscules

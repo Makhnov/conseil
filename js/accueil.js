@@ -4,6 +4,7 @@ const main = document.querySelector('main.content');
 const container = document.querySelector('section.container');
 const containerUtils = document.querySelector('section.utilitaires');
 const containerInfos = document.querySelector('section.informations');
+const TOOLTIP = document.querySelector('section.tooltip');
 
 const background = document.querySelector('img#background');
 const svg = document.querySelector('svg#data');
@@ -14,7 +15,9 @@ const valeursP = document.querySelectorAll('.graduations > div > p');
 const valeursTab = [0, 200, 400, 600, 800, 1000];
 const max = document.querySelector('div.plein-ecran');
 
-const ggs = document.querySelectorAll('#data > g:not(.divers):not(.nom)');
+const GGS = document.querySelectorAll('#data > g:not(.divers):not(.nom)');
+let previousG;
+const REGIONS = document.querySelectorAll('path.region.zone:not(.nom, .mer)');
 const paths = document.querySelectorAll('section.container path');
 const valbalafre = document.getElementById('valbalafre');
 const carte = document.querySelector('div.feerune');
@@ -27,32 +30,34 @@ const infosRegions = document.querySelector('div.regions ul');
 const infosLienFr = document.querySelector('div.lien p.fr a');
 const infosLienEng = document.querySelector('div.lien p.eng a');
 
-
-let redimensionnement = 4;
-let hauteurCarte = 10200 / redimensionnement;
-let largeurCarte = 6600 / redimensionnement;
+const ROOT = document.documentElement;
+const REDIM = 4;
+const VIEWBOX_X = 10200 / REDIM;
+const VIEWBOX_Y = 6600 / REDIM;
 
 let newScrollLeft;
 let newScrollTop;
-let width;
-let height;
-let newWidth;
-let newHeight;
-let longueur;
-let largeur;
-let newLongueur;
-let newLargeur;
+let largeurContainer;
+let hauteurContainer;
+let newLargeurContainer;
+let newHauteurContainer;
+let largeurCarte;
+let hauteurCarte;
+let newLargeurCarte;
+let newHauteurCarte;
 const scaleAmount = 0.5;
 let carteScale = 1;
 let containerScale;
 
-let dataG = {};
+//Les objets qui récupèrent les données originales.
+let dataGG = {};
+let box = {};
 
 function init() {
     console.log('Hello World!');
     resize();
     originalData();
-    //console.log(dataG);
+    //console.log(dataGG);
     //utilsInit();
     console.log('startloading');
     // Appel de la fonction asynchrone après les autres fonctions
@@ -109,23 +114,30 @@ function infos(g) {
 }
 
 function echelleZoom() {
+
+    //Calcul des nouvelles graduations
     for (let i = 0; i < valeursP.length - 1; i++) {
         valeursP[i + 1].textContent = Math.floor(valeursTab[i] / carteScale);
     }
+
+    // Calcul de la nouvelle opacité du hover
+    const opacity = 0.8 - (0.08 * carteScale);
+
+    ROOT.style.setProperty('--opacity', opacity);
+    // console.log('Zoom:', carteScale);
+    // console.log('Opacité:', opacity);
 }
 
 function zoom(event) {
-    let scaleDelta;
 
-    if (event.deltaY < 0) {
-        // Zoom in
-        scaleDelta = scaleAmount;
-    } else {
-        // Zoom out
+    //On suppose un zoom IN
+    let scaleDelta = scaleAmount;
+    if (event.deltaY > 0) {
+        //C'était un zoom OUT
         scaleDelta = -scaleAmount;
     }
 
-    // Calculate new scale
+    //On calcule le nouveau scaling.
     const newScale = Math.max(Math.min((carteScale + scaleDelta), 10), 1);
 
     // Get mouse position relative to the carte
@@ -133,18 +145,25 @@ function zoom(event) {
 
     carte.style.transform = `scale(${newScale})`;
 
+    //dimensions actuelles du conteneur
+    largeurContainer = VIEWBOX_X * containerScale * carteScale;
+    hauteurContainer = VIEWBOX_Y * containerScale * carteScale;
 
-    width = largeurCarte * containerScale * carteScale;
-    height = hauteurCarte * containerScale * carteScale;
-    newWidth = largeurCarte * containerScale * newScale;
-    newHeight = hauteurCarte * containerScale * newScale;
-    longueur = event.clientX + Math.abs(rect.left);
-    largeur = event.clientY + Math.abs(rect.top);
-    newLongueur = (longueur / width) * newWidth;
-    newLargeur = (largeur / height) * newHeight;
+    //nouvelles dimensions (après zoom)
+    newLargeurContainer = VIEWBOX_X * containerScale * newScale;
+    newHauteurContainer = VIEWBOX_Y * containerScale * newScale;
 
-    newScrollLeft = (newLongueur - event.clientX) / containerScale;
-    newScrollTop = (newLargeur - event.clientY) / containerScale;
+    //dimensions actuelles de la carte
+    largeurCarte = event.clientX + Math.abs(rect.left);
+    hauteurCarte = event.clientY + Math.abs(rect.top);
+
+    //nouvelles dimensions (après zoom)
+    newLargeurCarte = (largeurCarte / largeurContainer) * newLargeurContainer;
+    newHauteurCarte = (hauteurCarte / hauteurContainer) * newHauteurContainer;
+
+    //positionnement de la carte (avec les nouvelles dimensions)
+    newScrollLeft = (newLargeurCarte - event.clientX) / containerScale;
+    newScrollTop = (newHauteurCarte - event.clientY) / containerScale;
 
     container.scrollLeft = newScrollLeft;
     container.scrollTop = newScrollTop;
@@ -152,6 +171,54 @@ function zoom(event) {
 
     echelleZoom();
 }
+
+function zoomRegion(g) {
+    //Nom de la région
+    //console.log(g.id);
+
+    if (g.classList.contains('zoomed')) {
+        // On récupère les données initiales
+        const GDATA = dataGG[g.id];
+        const newScale = GDATA.scale;
+        const posGauche = GDATA.left;
+        const posHaut = GDATA.top;
+        // console.log(newScale);
+        // console.log(posGauche);
+        // console.log(posHaut);
+
+        // Appliquer le nouveau zoom
+        carte.style.transform = "scale(" + newScale + ")";
+        // Positionner la région en haut à gauche
+        container.scrollLeft = posGauche;
+        container.scrollTop = posHaut;
+
+        // Mise à jour de carteScale
+        carteScale = newScale;
+    } else {
+
+        // Appliquer le nouveau zoom
+        carte.style.transform = "scale(1)";
+        // Positionner la région en haut à gauche
+        container.scrollLeft = 0;
+        container.scrollTop = 0;
+
+        // Mise à jour de carteScale
+        carteScale = 1;
+    }
+
+    echelleZoom();
+}
+
+/*
+container.addEventListener('contextmenu', function (event) {
+    event.preventDefault(); // Empêche l'affichage du menu contextuel par défaut
+
+    console.log('scrollTop:', container.scrollTop);
+    console.log('Hauteur:', newLargeurContainer);
+    console.log('scrollLeft:', container.scrollLeft);
+    console.log('Largeur:', newHauteurContainer);
+});
+*/
 
 function resize() { // Fonction qui permet de redimensionner un groupe de personnages en fonction de l'écran de l'utilisateur
     //console.log('resize');
@@ -163,13 +230,13 @@ function resize() { // Fonction qui permet de redimensionner un groupe de person
     containerInfos.style.removeProperty('transform');
     max.style.removeProperty('display');
 
-    const width = document.documentElement.clientWidth; // On récupère la largeur de l'écran de l'utilisateur
-    const height = document.documentElement.clientHeight; // On récupère la hauteur de l'écran de l'utilisateur
-    const ratio = (width / height) / (51 / 33); // Le ratio de notre image de fond (la salle du conseil) est de 16/9e
+    const widthScreen = document.documentElement.clientWidth; // On récupère la largeur de l'écran de l'utilisateur
+    const heightScreen = document.documentElement.clientHeight; // On récupère la hauteur de l'écran de l'utilisateur
+    const ratio = (widthScreen / heightScreen) / (51 / 33); // Le ratio de notre image de fond (la salle du conseil) est de 16/9e
 
     // On stocke les ratios hauteurs & largeur par rapport à la taille actuelle de l'écran de l'utilisateur minorés de 2,5% pour les marges
-    let widthRatio = (width / hauteurCarte);
-    let heightRatio = (height / largeurCarte);
+    let widthRatio = (widthScreen / VIEWBOX_X);
+    let heightRatio = (heightScreen / VIEWBOX_Y);
 
     /* On vérifie si l'écran est plus ou moins au bonnes dimensions (+/-20%) ou si il est beaucoup trop large ou beaucoup trop haut */
     /* On utilisera le ratio le plus réducteur */
@@ -180,8 +247,8 @@ function resize() { // Fonction qui permet de redimensionner un groupe de person
 
     const containerHauteur = container.offsetHeight * containerScale;
     const containerLargeur = container.offsetWidth * containerScale;
-    const hauteurTemp = height - containerHauteur;
-    const largeurTemp = width - containerLargeur;
+    const hauteurTemp = heightScreen - containerHauteur;
+    const largeurTemp = widthScreen - containerLargeur;
 
     if (hauteurTemp > 150 || largeurTemp > 200) {
         if (ratio < 1) {//HAUTEUR DE LA CARTE REDUITE
@@ -198,18 +265,40 @@ function resize() { // Fonction qui permet de redimensionner un groupe de person
         containerUtils.style.transform = "scaleX(" + widthRatio + ") scaleY(" + heightRatio + ")";
         max.style.display = "block";
     }
-    /* on place la box (#scene) au centre de l'écran puis on scale ses dimensions en fonctions des ratios précédemment calculés */
 }
 
 // DONNES
 function originalData() {
-    for (let g of ggs) {
+    let box = carte.getBoundingClientRect();
+    let x = box.width;
+    let y = box.height;
+    for (let g of GGS) {
         let rect = g.getBoundingClientRect();
-        dataG[g.id] = {
-            left: rect.left,
-            top: rect.top,
-            width: rect.width,
-            height: rect.height
+
+        const xRatio = rect.width / x;
+        const yRatio = rect.height / y;
+
+        let ratio = yRatio;
+        if (xRatio > yRatio) {
+            ratio = xRatio;
+        }
+
+        //On récupère le scaling de cet objet
+        const scaling = 1 / ratio * .94;
+
+        const largeur = VIEWBOX_X * scaling;
+        const hauteur = VIEWBOX_Y * scaling;
+        const gauche = rect.left / x;
+        const haut = rect.top / y;
+
+        //on récupère le positionnement de cet objet
+        const scrollX = gauche * largeur;
+        const scrollY = haut * hauteur;
+
+        dataGG[g.id] = {
+            left: scrollX,
+            top: scrollY,
+            scale: scaling,
         };
     }
 }
@@ -227,60 +316,54 @@ carte.addEventListener('wheel', (event) => {//ZOOM
 //REDIMENSIONNEMENT DE LA CARTE ET DE LA ZONE DES INFOS
 window.addEventListener('resize', debounce(resize, 300));
 
-ggs.forEach((g) => {//INFOS SUR (mouseover) & ZOOM CIBLE "click"
+GGS.forEach((g) => {//INFOS SUR (mouseover) & ZOOM CIBLE "click"
     g.addEventListener('mouseover', () => {
-        infos(g);
+        if (previousG) {
+            if (!previousG.classList.contains('zoomed')) {
+                infos(g);
+            }
+        } else {
+            infos(g);
+        }
     });
     g.addEventListener('click', function (event) {
         event.stopPropagation();
-        console.log(g.id);
-
-        // Données initiales
-        let initData = dataG[g.id];
-        console.log(initData);
-
-        const box = carte.getBoundingClientRect();
-
-        const xRatio = initData.width / (box.width / carteScale);
-        const yRatio = initData.height / (box.height / carteScale);
-        console.log(xRatio);
-
-        let ratio = yRatio;
-        if (xRatio > yRatio) {
-            ratio = xRatio;
-        }
-
-
-        // Calculer le nouveau niveau de zoom
-        let newScale = 1 / ratio * .94;
-        console.log(newScale);
-
-        // Appliquer le nouveau zoom
-        carte.style.transform = "scale(" + newScale + ")";
-
-        window.getComputedStyle(carte).transform;
-        const xBox = container.getBoundingClientRect();
-        const newObj = g.getBoundingClientRect();
-
-        // Mise à jour de carteScale
-        carteScale *= newScale;
-
-        // Nouvelles valeurs de positionnement de l'objet :
-        let newTop = (newObj.top - xBox.top) / xBox.height
-        let newLeft = (newObj.left - xBox.left) / xBox.width;
-
-        // Positionner le conteneur après le zoom
-        container.scrollTop = (newTop * container.offsetHeight);
-        container.scrollLeft = (newLeft * container.offsetWidth);
+        g.classList.toggle('zoomed');
+        //TOOLTIP.style.display = (TOOLTIP.style.display !== "flex") ? "flex" : "none";
+        if (previousG) { previousG.classList.remove('zoomed') };
+        zoomRegion(g);
+        infos(g);
+        previousG = g;
+        console.log(previousG);
     });
     /*
     g.addEventListener('click', function (event) {
         event.stopPropagation();
         console.log(g.id);
-
     });
     */
 });
+
+// Ecouteur d'événement pour le 'mouseenter'.
+container.addEventListener('mouseenter', (e) => {
+    // Afficher TOOLTIP et le faire suivre la souris.
+    TOOLTIP.style.display = "flex";
+    document.addEventListener('mousemove', moveTooltip);
+});
+
+// Ecouteur d'événement pour le 'mouseleave'.
+container.addEventListener('mouseleave', (e) => {
+    // Cacher TOOLTIP et arrêter de le faire suivre la souris.
+    TOOLTIP.style.display = "none";
+    document.removeEventListener('mousemove', moveTooltip);
+});
+
+// Fonction pour déplacer le tooltip.
+function moveTooltip(e) {
+    TOOLTIP.style.left = e.pageX + 'px';
+    TOOLTIP.style.top = (e.pageY - 26) + 'px';
+    TOOLTIP.textContent = infosNom.textContent;
+}
 
 max.addEventListener('click', () => {//OUVERTURE DU MENU INFOS (Uniquement si la carte est en plein écran)
     resize();

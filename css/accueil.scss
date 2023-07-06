@@ -51,86 +51,6 @@ html body main.content.max {//MENU INFOS OUVERT
     }
 }
 
-section.informations {
-    position: absolute;
-    z-index: 2;
-    pointer-events: auto;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    bottom: 0;
-    right: 0;
-    box-sizing: border-box;
-    border: 10px solid #c8ad7f;
-    background-color: whitesmoke;
-    transform-origin: right bottom;
-    transition: transform .75s;
-    overflow: hidden;
-
-    div.bordure {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: calc(100% - 10px);
-        width: calc(100% - 10px);
-        border: 5px solid black;
-    }
-
-    #infos {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
-        flex-wrap: wrap;
-
-        >div {
-            flex: 1 1 150px;
-            min-height: 0;
-            min-width: 0;
-            overflow: hidden;
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid black;
-            container-type: inline-size;
-
-            h1,
-            p,
-            a,
-            ul {
-                pointer-events: auto;
-                margin: 0;
-                padding: 0;
-            }
-
-            li {
-                list-style: none;
-            }
-
-            h1 {
-                //font-family: Dalelands;
-                font-size: clamp(1.25rem, 10cqi, 2rem);
-                margin-bottom: 5px;
-            }
-
-            a,
-            p.lien {
-                font-size: clamp(1rem, 11cqi, 1.6rem);
-            }
-
-            p:not(.description, .lien),
-            ul {
-                font-size: clamp(.9rem, 10cqi, 1.5rem);
-            }
-
-            p.description {
-                font-size: clamp(.75rem, 8cqi, 1.5vh);
-                overflow: auto;
-            }
-        }
-    }
-}
-
 section.utilitaires {
     position: absolute;
     pointer-events: none;
@@ -338,20 +258,110 @@ section.utilitaires {
     }
 }
 
-section.container {
+section.informations {
     position: absolute;
+    z-index: 2;
+    pointer-events: auto;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    bottom: 0;
+    right: 0;
+    box-sizing: border-box;
+    border: 10px solid #c8ad7f;
+    background-color: whitesmoke;
+    transform-origin: right bottom;
+    transition: transform .75s;
+    overflow: hidden;
+
+    div.bordure {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: calc(100% - 10px);
+        width: calc(100% - 10px);
+        border: 5px solid black;
+    }
+
+    #infos {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        >div {
+            flex: 1 1 150px;
+            min-height: 0;
+            min-width: 0;
+            overflow: hidden;
+            padding: 5px;
+            box-sizing: border-box;
+            border: 1px solid black;
+            container-type: inline-size;
+
+            h1,
+            p,
+            a,
+            ul {
+                pointer-events: auto;
+                margin: 0;
+                padding: 0;
+            }
+
+            li {
+                list-style: none;
+            }
+
+            h1 {
+                //font-family: Dalelands;
+                font-size: clamp(1.25rem, 10cqi, 2rem);
+                margin-bottom: 5px;
+            }
+
+            a,
+            p.lien {
+                font-size: clamp(1rem, 11cqi, 1.6rem);
+            }
+
+            p:not(.description, .lien),
+            ul {
+                font-size: clamp(.9rem, 10cqi, 1.5rem);
+            }
+
+            p.description {
+                font-size: clamp(.75rem, 8cqi, 1.5vh);
+                overflow: auto;
+            }
+        }
+    }
+}
+
+section.tooltip {
+    display: none;
+
+    position: absolute;
+    z-index: 10;
+    background-color: orange;     
+    height:25px;
+    width: 100px;   
+    overflow: hidden;
+}
+
+section.container {
+    position: relative;
     transform-origin: top left;
     width: $largeurBox;
     aspect-ratio: 51/33;
     overflow: scroll;
     
     div.feerune {
-        position: relative;
+        position: absolute;
         transform-origin: top left;
 
         width: 100%;
         height: 100%;
-        filter: brightness(1.25);
     }
 
     div.feerune>#background {
@@ -365,28 +375,14 @@ section.container {
         //transform-origin: center;
     }
 
-    svg>g>g {
-        pointer-events: none;
-    }
-
     svg {
         position: absolute;
+    }
 
-        #valbalafre {
-            pointer-events: auto;
-            cursor: pointer;
-
-            &:hover {
-                fill: red;
-                fill-opacity: .4;
-            }
-        }
-
-        path {
-            fill-rule: evenodd;
-            fill: transparent;
-            transition: .5s;
-        }
+    path {
+        fill-rule: evenodd;
+        fill: transparent;
+        transition: .5s;
     }
 
     path.divers:not(.nom):hover {
@@ -403,34 +399,47 @@ section.container {
         }
     }
 
-    path:not(.bordure, .divers:not(.nom)) {
-        fill: black;
-        fill-opacity: .15;
-    }
-
     g:not(.divers):hover {
-
-        // &:not(.mer) {
-        //     stroke: black;
-        //     stroke-width: .25rem;
-        //     stroke-opacity: 1;
-        // }
 
         path.region.mer {
             fill: rgb(50, 149, 182);
         }
 
-        path.nom.mer {
+        path.region.zone:not(.nom, .mer) {
+            fill: green;
+            fill-opacity: var(--opacity);
+        }
+
+        path.region.nom {
             fill: red;
+            fill-opacity: .4;
+        }
+    }
+
+    g:not(.divers).zoomed {
+
+        path.region.mer {
+            fill: rgb(50, 149, 182);
         }
 
         path.region.zone:not(.nom, .mer) {
             fill: green;
-            fill-opacity: .6;
+            fill-opacity: var(--opacity);
         }
 
-        path.region.nom:not(.mer) {
+        path.region.nom {
             fill: red;
+            fill-opacity: .4;
+        }
+    }
+
+    #valbalafre {
+        pointer-events: auto;
+        cursor: pointer;
+
+        &:hover {
+            fill: red;
+            fill-opacity: .4;
         }
     }
 }
