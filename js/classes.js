@@ -93,9 +93,10 @@ class Personnage {
         this.id_emplacement = id_emplacement;
     }
 }
+window.Personnage = Personnage;
 
 // Classe Position
-// Attributs : id, top, left, height, width, scaling, zIndex, image, idLocalite, idPersonnage, idRegion, idEmplacement
+// Attributs : id, top, left, height, width, scaling, zIndex, image, idLocalite, idPersonnage, idRegion, idEmplacement*
 class Position {
     // CONSTRUCTEUR
     constructor(id, top, left, height, width, scaling, zIndex, image, idLocalite, idPersonnage, idRegion, idEmplacement) {
@@ -211,6 +212,7 @@ class Position {
         this.idEmplacement = idEmplacement;
     }
 }
+window.Position = Position;
 
 // Classe Emplacement
 // Attributs : id, nom, nbMembres, description, idLocalite

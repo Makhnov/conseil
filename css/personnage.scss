@@ -205,7 +205,7 @@ html body.personnage {
         }
     }
 
-    form {
+    section.formulaire {
         position: absolute;
         z-index: 20;
         top: 10vh;
@@ -223,10 +223,6 @@ html body.personnage {
             transform: translate(-50%, -50%);
             height: 50%;
             width: 50%;
-        }
-
-        input {
-            display: none;
         }
     }
 }

@@ -31,7 +31,7 @@
                             </nav>
                             <nav>
                                 <button id="validation" type="button" onclick="validation()">Valider</button>
-                                <button id="edition" type="button" onclick="edition()">Editer</button>
+                                <button id="annulation" type="button" onclick="edition()">Annuler</button>
                             </nav>
                             </header>
                         <?php

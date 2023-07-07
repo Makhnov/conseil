@@ -16,16 +16,12 @@ get_header($class);
 ?>
 
 <main class="bodyProfil">
-    <form method="GET" action="../index2.php">
+    <section class="formulaire">
         <textarea id="inputText" name="description"></textarea>                
-        <input type="text" name="id" value="14">
-        <input id ="validationPhp" type="submit" value="Valider">
-    </form>
+    </section>
 
     <div id="sceneProfil">
-        
         <?php afficher_personnages($personnage) ?>
-
     </div>
 </main>
 

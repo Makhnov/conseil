@@ -73,43 +73,30 @@ html body.personnage header {
         top: calc(-8vh);
         transform: rotateX(180deg);
 
-        #edition {
+        button {
             all: initial;
-            align-self: center;
-            visibility: hidden;
-            height: 80%;
-            width: clamp(70px, 15vw, 150px);
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            font-size: clamp(.9rem, 2vw, 2rem);
             cursor: pointer;
-            background: rgba(0, 128, 0, 0.25);
-        }
+            
+            height: 80%;
+            align-self: center;
+            width: clamp(70px, 15vw, 150px);
+            text-align: center;
+            font-size: clamp(.9rem, 2vw, 2rem);
+            font-weight: bold;
+            border-radius: 5px;
 
-        #edition:hover {
-            filter: brightness(1.5);
-            text-shadow: 0.5px 0.25px 0px black;
+            &:hover {
+                filter: brightness(1.5);
+                text-shadow: 0.5px 0.25px 0px black;
+            }
+        }
+        
+        #annulation {
+            background-color: rgba(175, 0, 0, 0.25);
         }
 
         #validation {
-            all: initial;
-            align-self: center;
-            opacity: 0;
-            justify-self: end;
-            height: 80%;
-            width: clamp(70px, 15vw, 150px);
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            font-size: clamp(.9rem, 2vw, 2rem);
-            cursor: pointer;
             background: rgba(0, 128, 0, 0.25);
-        }
-
-        #validation:hover {
-            filter: brightness(1.5);
-            text-shadow: 0.5px 0.25px 0px black;
         }
     }
 }

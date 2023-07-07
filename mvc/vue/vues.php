@@ -29,10 +29,6 @@
         $data = get_personnages($id, $attr);
         $personnages = $data['personnages'];
         $positions = $data['positions'];
-        echo '<script>';
-        echo 'const personnages = ' . json_encode($personnages) . ';';
-        echo 'const positions = ' . json_encode($positions) . ';';
-        echo '</script>';
     
         // var_dump($personnages);
         // var_dump($positions);
@@ -41,7 +37,12 @@
         $imgDiv = get_url('base') . $stockageImages;
 
         switch ($attr) {
-            case 'emplacement':            
+            case 'emplacement': 
+                echo '<script>';
+                echo 'const personnages = ' . json_encode($personnages) . ';';
+                echo 'const positions = ' . json_encode($positions) . ';';
+                echo '</script>';
+
                 foreach ($personnages as $index => $personnage) {
                     $id = $personnage->getIdPersonnage();
                     $slug = $personnage->getSlugPersonnage();
@@ -89,10 +90,19 @@
                 }
                 break;
                 case null:
+                    $personnage = $personnages[0];
+                    $position = $positions[0];
+                    $classe = $personnage->getSlugPersonnage();
+
+                    $personnageArray = $personnage->getAllPersonnage();
+                    $positionArray = $position->getAllPosition();
+                    echo '<script>';
+                    echo 'window.personnage = ' . json_encode($personnageArray) . ';';
+                    echo 'window.position = ' . json_encode($positionArray) . ';';
+                    echo '</script>';                    
+
                     switch ($id) {
                         case is_int($id):
-                            $personnage = $personnages[0];
-                            $position = $positions[0];
                             echo '<h1>' . $personnage->getNomPersonnage() . '</h1>';
                             echo '<div id="fonctions">';
                             echo '<h2>' . $personnage->getTitrePersonnage() . '</h2>';
@@ -104,11 +114,8 @@
                             echo '<div id="bgConseil"></div>';
                             echo '<div id="imageConseil" class="' . $personnage->getSlugPersonnage() . '" onclick="fullscreenCharacter()"></div>';
                             break;
-                        case is_string($id):
-                            $personnage = $personnages[0];
-                            $position = $positions[0];
-                            $classe = $personnage->getSlugPersonnage();
 
+                        case is_string($id):
                             echo '<h1>' . $personnage->getNomPersonnage() . '</h1>';
                             echo '<div id="fonctions">';
                             echo '<h2>' . $personnage->getTitrePersonnage() . '</h2>';
@@ -120,11 +127,9 @@
                             echo '<div id="bgConseil"></div>';
 
                             echo '<div id="imageConseil" class="' . $classe . '">';
-                            
                             $urlImage = $position->getImage();
                             $image = str_replace('../', $imgDiv, $urlImage);
                             $img = str_replace('Min', '', $image);
-                    
                             $codeCSS = "
                                 .{$classe} {
                                     background-image: {$img};

@@ -174,6 +174,24 @@
             return $this->idEmplacement;
         }
 
+        public function getAllPosition(): array {
+            return [
+                'id' => $this->getId(),
+                'top' => $this->getTop(),
+                'left' => $this->getLeft(),
+                'height' => $this->getHeight(),
+                'width' => $this->getWidth(),
+                'scaling' => $this->getScaling(),
+                'zIndex' => $this->getZIndex(),
+                'image' => $this->getImage(),
+                'id_localite' => $this->getIdLocalite(),
+                'id_personnage' => $this->getIdPersonnage(),
+                'id_region' => $this->getIdRegion(),
+                'id_emplacement' => $this->getIdEmplacement(),
+            ];
+        }
+        
+
         // SETTERS //
         public function setId(int $id): void {
             $this->id = $id;

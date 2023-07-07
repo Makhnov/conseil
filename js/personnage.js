@@ -1,45 +1,62 @@
 console.log('personnage.js');
 
-const EDITIN = document.querySelector('#modifier');
-const EDITOUT = document.querySelector('#edition');
+let personnage = new Personnage(
+    window.personnage.id,
+    window.personnage.nom,
+    window.personnage.slug,
+    window.personnage.titre,
+    window.personnage.role,
+    window.personnage.description,
+    window.personnage.id_localite,
+    window.personnage.id_emplacement
+);
+
+let position = new Position(
+    window.position.id,
+    window.position.top,
+    window.position.left,
+    window.position.height,
+    window.position.width,
+    window.position.scaling,
+    window.position.zIndex,
+    window.position.image,
+    window.position.idLocalite,
+    window.position.idPersonnage,
+    window.position.idRegion,
+    window.position.idEmplacement
+);
+
+console.log(personnage);
+console.log(position);
+
+const MODIF = document.querySelector('#modifier');
+const SUBMIT = document.querySelector('#validation');
+const CANCEL = document.querySelector('#annulation');
 const IMAGE = document.querySelector('#imageConseil');
-const FORM = document.querySelector('form');
+const FORM = document.querySelector('section.formulaire');
 const TEXTAREA = document.querySelector('textarea');
+const SCENE = document.querySelector('#sceneProfil');
+const NAV1 = document.getElementsByTagName('nav')[0];
+const NAV2 = document.getElementsByTagName('nav')[1];
 
-let editActive = false; // Booléen qui permet de vérifier si l'utilisateur est en train d'éditer une description ou non. Fonction: edition()
-let fullscreenActive = false; // Booléen qui permet de vérifier si le personnage est en plein écran ou non. Fonction:  fullscreenCharacter()
+const PERSO = document.getElementById('imageConseil');
+const ARRIEREPLAN = document.getElementById('bgConseil');
 
-function edition() { // Fonction qui permet de modifier le style de la page lors de l'édition
-    console.log(FORM);
-    const textArea = document.getElementById('inputText');
-    const edit = document.getElementById('edition');
-    const logo = document.getElementById('sceneProfil');
-    const val = document.getElementById('validation');
-    const nav1 = document.getElementsByTagName('nav')[0];
-    const nav2 = document.getElementsByTagName('nav')[1];
+let fullScreen = false; // Booléen qui permet de vérifier si le personnage est en plein écran ou non. Fonction:  fullscreenCharacter()
 
-    editActive = !editActive;
-
-    if (editActive) {
-        edit.textContent = "Annuler";
-        edit.style.backgroundColor = "rgba(175, 0, 0, 0.25)";
-        edit.style.visibility = "visible";
+function edition(bool) {
+    if (bool) {//Ouverture de la zone d'édition
         FORM.style.clipPath = "inset(0 0 0 0)";
-        logo.style.filter = "grayscale(1.25) blur(1px)";
-        val.style.opacity = "1";
-        nav1.style.transform = "rotateX(180deg)";
-        nav2.style.transform = "rotateX(0deg)"
+        SCENE.style.filter = "grayscale(1.5) blur(1px)";
+        NAV1.style.transform = "rotateX(180deg)";
+        NAV2.style.transform = "rotateX(0deg)"
 
-    } else {
-        edit.textContent = "Editer";
-        edit.style.backgroundColor = "rgba(0, 128, 0, 0.25)";
-        edit.style.visibility = "hidden";
-        logo.style.clipPath = "inset(0 0 0 0)";
+    } else {//Fermeture de la zone d'édition
+        SCENE.style.clipPath = "inset(0 0 0 0)";
         FORM.style.clipPath = "inset(50% 50% 50% 50%)";
-        logo.style.filter = "none";
-        val.style.opacity = "0";
-        nav2.style.transform = "rotateX(180deg)";
-        nav1.style.transform = "rotateX(0deg)"
+        SCENE.style.filter = "none";
+        NAV2.style.transform = "rotateX(180deg)";
+        NAV1.style.transform = "rotateX(0deg)"
     }
 }
 
@@ -53,27 +70,20 @@ function validation() {  // Fonction qui permet de valider le formulaire (Method
 
 function fullscreenCharacter() { // Fonction qui permet de lancer un zoom sur les personnages afin de les mettre en "plein écran"
 
-    const perso = document.getElementById('imageConseil');
-    const chateau = document.getElementById('bgConseil');
+    fullScreen = !fullScreen;
 
-    fullscreenActive = !fullscreenActive;
-
-    if (fullscreenActive) {
-        perso.style.height = "100%";
-        perso.style.width = "100%";
-        perso.style.setProperty('top', '0', 'important');
-        perso.style.setProperty('left', '0', 'important');
-        chateau.style.opacity = "1";
-        chateau.style.filter = "brightness(1.5) contrast(.5) blur(2px)";
-        chateau.style.backgroundSize = "cover";
+    if (fullScreen) {
+        PERSO.style.height = "100%";
+        PERSO.style.width = "100%";
+        PERSO.style.setProperty('top', '0', 'important');
+        PERSO.style.setProperty('left', '0', 'important');
+        ARRIEREPLAN.style.filter = "brightness(1.5) contrast(.5) blur(2px)";
     } else {
-        perso.style.top = "38%";
-        perso.style.left = "40%";
-        perso.style.height = "60%";
-        perso.style.width = "50%";
-        chateau.style.opacity = "1";
-        chateau.style.filter = "brightness(1)";
-        chateau.style.backgroundSize = "cover";
+        PERSO.style.height = "60%";
+        PERSO.style.width = "50%";
+        PERSO.style.top = "38%";
+        PERSO.style.left = "40%";
+        ARRIEREPLAN.style.filter = "brightness(1)";
     }
 }
 
@@ -81,7 +91,21 @@ function fullscreenCharacter() { // Fonction qui permet de lancer un zoom sur le
 TEXTAREA.addEventListener('click', function (event) {
     event.stopPropagation();
 });
-EDITIN.addEventListener('click', edition);
-EDITOUT.addEventListener('click', edition);
-FORM.addEventListener('click', edition);
+
+//OUVERTURE DE LA ZONE D'EDITION
+MODIF.addEventListener('click', function () {
+    edition(true);
+});
+
+//FERMETURE EDITION (CLICK SUR BOUTON)
+CANCEL.addEventListener('click', function () {
+    edition(false);
+});
+
+//FERMETURE EDITION (CLICK SUR ARRIERE-PLAN)
+FORM.addEventListener('click', function () {
+    edition(false);
+});
+
+//IMAGE EN PLEIN ECRAN 
 IMAGE.addEventListener('click', fullscreenCharacter);
