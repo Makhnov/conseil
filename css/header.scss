@@ -1,4 +1,4 @@
-header {
+body.localite header {
     position: fixed;
     margin: 0;
     padding: 0;
@@ -13,18 +13,28 @@ header {
     //p {}
 }
 
-body.accueil header {
+body.accueil header, body.emplacement header {
     display: none;
 }
 
 //HEADER PC
-html body.personnage header {
+html body.personnage {
+    background-color: black;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    margin: 0;
     padding: 0;
-    height: 8vh;
-    width: 96vw;
-    margin: auto;
-    margin-bottom: 2vh;
-    flex: none;
+}
+
+html body.personnage header {
+        padding: 0;
+        height: 8vh;
+        width: 96vw;
+        margin: auto;
+          margin-bottom: auto;
+        margin-bottom: 2vh;
+        flex: none;
 
     nav {
         position: relative;
@@ -106,7 +116,7 @@ html body.personnage header {
 
 //HEADER MOBILE PORTRAIT
 @media all and (max-width: 1000px) {
-    body:not(.accueil) header {
+    body:not(.accueil, .conseil, .personnage) header {
         padding: 0 !important;
         height: 8vh !important;
         width: 96vw !important;
@@ -115,7 +125,7 @@ html body.personnage header {
 
 //HEADER MOBILE PAYSAGE
 @media all and (max-width: 1000px) and (orientation: landscape) {
-    body:not(.accueil) header {
+    body:not(.accueil, .conseil, .personnage) header {
         padding: 0 !important;
         height: 8vh !important;
         width: 96vw !important;

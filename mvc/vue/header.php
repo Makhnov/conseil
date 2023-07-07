@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-    <html>
+<html>
 
     <head>
-    <title>Feerune</title>
+        <title>Feerune</title>
 
-    <meta name="author" content="Nico M">
-    <meta name="description" content="Aide pour campagne dans les royaumes oubliés">
+        <meta name="author" content="Nico M">
+        <meta name="description" content="Aide pour campagne dans les royaumes oubliés">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <?php assets('css', 'header'); ?>
-    <link rel="icon" type="image/x-icon" href="<?php echo get_url('/img/favdnd.ico') ?>">
-    <?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>';?>
-
+        <?php assets('css', 'header'); ?>
+        <link rel="icon" type="image/x-icon" href="<?php echo get_url('/img/favdnd.ico') ?>">
+        <?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>';?>
     </head>
         <body class="<?php echo $class; ?>" <?php //if ($class === 'accueil') { [FINPHPHERE] onload="init()"<?php } ?>>
             <header>

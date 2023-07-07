@@ -338,15 +338,16 @@ section.informations {
     }
 }
 
-section.tooltip {
+section.tooltip {//DESACTIVE
     display: none;
-
+    /*
     position: absolute;
     z-index: 10;
     background-color: orange;     
     height:25px;
     width: 100px;   
     overflow: hidden;
+    */
 }
 
 section.container {
@@ -368,11 +369,6 @@ section.container {
         position: absolute;
         width: 100%;
         height: 100%;
-        // background-image: url(../img/carte-min.jpg);
-        // background-repeat: no-repeat;
-        // background-size: 100% 100%;
-        // background-position: top left;
-        //transform-origin: center;
     }
 
     svg {
@@ -399,7 +395,7 @@ section.container {
         }
     }
 
-    g:not(.divers):hover {
+    g:not(.divers).zoomed, g:not(.divers).survol {
 
         path.region.mer {
             fill: rgb(50, 149, 182);
@@ -416,27 +412,10 @@ section.container {
         }
     }
 
-    g:not(.divers).zoomed {
-
-        path.region.mer {
-            fill: rgb(50, 149, 182);
-        }
-
-        path.region.zone:not(.nom, .mer) {
-            fill: green;
-            fill-opacity: var(--opacity);
-        }
-
-        path.region.nom {
-            fill: red;
-            fill-opacity: .4;
-        }
-    }
-
-    #valbalafre {
+    path.localite.survol {
         pointer-events: auto;
         cursor: pointer;
-
+        z-index: 10;
         &:hover {
             fill: red;
             fill-opacity: .4;

@@ -17,9 +17,7 @@ const max = document.querySelector('div.plein-ecran');
 
 const GGS = document.querySelectorAll('#data > g:not(.divers):not(.nom)');
 let previousG;
-const REGIONS = document.querySelectorAll('path.region.zone:not(.nom, .mer)');
-const paths = document.querySelectorAll('section.container path');
-const valbalafre = document.getElementById('valbalafre');
+const LOCALITE = document.querySelectorAll('path.localite')
 const carte = document.querySelector('div.feerune');
 
 const infosNom = document.querySelector('div.nom p');
@@ -34,6 +32,9 @@ const ROOT = document.documentElement;
 const REDIM = 4;
 const VIEWBOX_X = 10200 / REDIM;
 const VIEWBOX_Y = 6600 / REDIM;
+const WINDOWRATIO = 51 / 33;
+const BORDURE = 40;
+
 
 let newScrollLeft;
 let newScrollTop;
@@ -205,20 +206,67 @@ function zoomRegion(g) {
         // Mise à jour de carteScale
         carteScale = 1;
     }
-
     echelleZoom();
 }
 
-/*
+//DONNES POUR LE ZOOM DES REGIONS
+function originalData() {
+    let box = carte.getBoundingClientRect();
+    let x = box.width;
+    let y = box.height;
+
+    for (let g of GGS) {
+        let rect = g.getBoundingClientRect();
+        const largeurObj = rect.width;
+        const hauteurObj = rect.height;
+
+        const xRatio = largeurObj / x;
+        const yRatio = hauteurObj / y;
+
+        let ratio = yRatio;
+        let vertical = true;
+        if (xRatio > yRatio) {
+            vertical = false;
+            ratio = xRatio;
+        }
+
+        //On récupère le scaling de cet objet
+        const scaling = 1 / ratio * 0.94;//0.94 = marges
+
+        const largeurBox = VIEWBOX_X * scaling;
+        const hauteurBox = VIEWBOX_Y * scaling;
+
+        const posLeft = rect.left / x;
+        const posTop = rect.top / y;
+
+        //on récupère le positionnement de cet objet
+        let scrollY;
+        let scrollX;
+
+        if (vertical) {
+            scrollY = posTop * hauteurBox - BORDURE;
+            scrollX = posLeft * largeurBox - (5 * BORDURE);
+        } else {
+            scrollY = posTop * hauteurBox - (5 * BORDURE);
+            scrollX = posLeft * largeurBox - BORDURE;
+        }
+
+        //On met les données dans le tableau associatif.
+        dataGG[g.id] = {
+            left: scrollX,
+            top: scrollY,
+            scale: scaling,
+        };
+    }
+}
+
+
 container.addEventListener('contextmenu', function (event) {
     event.preventDefault(); // Empêche l'affichage du menu contextuel par défaut
-
-    console.log('scrollTop:', container.scrollTop);
-    console.log('Hauteur:', newLargeurContainer);
-    console.log('scrollLeft:', container.scrollLeft);
-    console.log('Largeur:', newHauteurContainer);
+    console.log('scrollTop:', container.scrollTop / yqc);
+    console.log('scrollLeft:', container.scrollLeft / xqc);
 });
-*/
+
 
 function resize() { // Fonction qui permet de redimensionner un groupe de personnages en fonction de l'écran de l'utilisateur
     //console.log('resize');
@@ -267,44 +315,8 @@ function resize() { // Fonction qui permet de redimensionner un groupe de person
     }
 }
 
-// DONNES
-function originalData() {
-    let box = carte.getBoundingClientRect();
-    let x = box.width;
-    let y = box.height;
-    for (let g of GGS) {
-        let rect = g.getBoundingClientRect();
-
-        const xRatio = rect.width / x;
-        const yRatio = rect.height / y;
-
-        let ratio = yRatio;
-        if (xRatio > yRatio) {
-            ratio = xRatio;
-        }
-
-        //On récupère le scaling de cet objet
-        const scaling = 1 / ratio * .94;
-
-        const largeur = VIEWBOX_X * scaling;
-        const hauteur = VIEWBOX_Y * scaling;
-        const gauche = rect.left / x;
-        const haut = rect.top / y;
-
-        //on récupère le positionnement de cet objet
-        const scrollX = gauche * largeur;
-        const scrollY = haut * hauteur;
-
-        dataGG[g.id] = {
-            left: scrollX,
-            top: scrollY,
-            scale: scaling,
-        };
-    }
-}
-
 //LISTENERS
-window.addEventListener('load', function () {
+window.addEventListener('load', function () {//CHARGEMENT
     init();
 });
 
@@ -316,8 +328,9 @@ carte.addEventListener('wheel', (event) => {//ZOOM
 //REDIMENSIONNEMENT DE LA CARTE ET DE LA ZONE DES INFOS
 window.addEventListener('resize', debounce(resize, 300));
 
-GGS.forEach((g) => {//INFOS SUR (mouseover) & ZOOM CIBLE "click"
+GGS.forEach((g) => {//INFOS ('mouseover') & ZOOM ('click')
     g.addEventListener('mouseover', () => {
+        g.classList.add('survol');
         if (previousG) {
             if (!previousG.classList.contains('zoomed')) {
                 infos(g);
@@ -326,50 +339,37 @@ GGS.forEach((g) => {//INFOS SUR (mouseover) & ZOOM CIBLE "click"
             infos(g);
         }
     });
+    g.addEventListener('mouseleave', function () {
+        g.classList.remove('survol');
+    });
     g.addEventListener('click', function (event) {
         event.stopPropagation();
         g.classList.toggle('zoomed');
-        //TOOLTIP.style.display = (TOOLTIP.style.display !== "flex") ? "flex" : "none";
         if (previousG) { previousG.classList.remove('zoomed') };
         zoomRegion(g);
         infos(g);
         previousG = g;
-        console.log(previousG);
     });
-    /*
-    g.addEventListener('click', function (event) {
-        event.stopPropagation();
-        console.log(g.id);
-    });
-    */
 });
-
-// Ecouteur d'événement pour le 'mouseenter'.
-container.addEventListener('mouseenter', (e) => {
-    // Afficher TOOLTIP et le faire suivre la souris.
-    TOOLTIP.style.display = "flex";
-    document.addEventListener('mousemove', moveTooltip);
-});
-
-// Ecouteur d'événement pour le 'mouseleave'.
-container.addEventListener('mouseleave', (e) => {
-    // Cacher TOOLTIP et arrêter de le faire suivre la souris.
-    TOOLTIP.style.display = "none";
-    document.removeEventListener('mousemove', moveTooltip);
-});
-
-// Fonction pour déplacer le tooltip.
-function moveTooltip(e) {
-    TOOLTIP.style.left = e.pageX + 'px';
-    TOOLTIP.style.top = (e.pageY - 26) + 'px';
-    TOOLTIP.textContent = infosNom.textContent;
-}
 
 max.addEventListener('click', () => {//OUVERTURE DU MENU INFOS (Uniquement si la carte est en plein écran)
     resize();
     main.classList.toggle('max');
 });
 
-valbalafre.addEventListener('click', () => {//PARTIE PERSONNAGE (jdr)
-    window.location.href = "http://localhost/jdr/localite/valbalafre";
+LOCALITE.forEach(function (loc) {
+    ['mouseenter', 'mouseleave', 'mouseover', 'mouseout', 'mousedown', 'mouseup', 'click'].forEach(function (action) {
+        loc.addEventListener(action, function (event) {
+            event.stopPropagation();
+        });
+    });
+    loc.addEventListener('mouseover', function () {
+        loc.classList.add('survol');
+    });
+    loc.addEventListener('mouseleave', function () {
+        loc.classList.remove('survol');
+    });
+    loc.addEventListener('click', () => {//PARTIE PERSONNAGE (jdr)
+        window.location.href = "http://localhost/jdr/localite/" + loc.id;
+    });
 });

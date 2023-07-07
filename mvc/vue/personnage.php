@@ -15,8 +15,18 @@ $personnage = $_GET['personnage'];
 get_header($class);
 ?>
 
-<main>
-    <?php afficher_personnages(10) ?>
+<main class="bodyProfil">
+    <form method="GET" action="../index2.php">
+        <textarea id="inputText" name="description"></textarea>                
+        <input type="text" name="id" value="14">
+        <input id ="validationPhp" type="submit" value="Valider">
+    </form>
+
+    <div id="sceneProfil">
+        
+        <?php afficher_personnages($personnage) ?>
+
+    </div>
 </main>
 
 <?php

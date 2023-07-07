@@ -25,73 +25,121 @@
         return $url;
     }    
     
-    function afficher_personnages($id = null, $attr = null) {
-        $personnages = get_personnages($id, $attr);
+    function afficher_personnages($id = null, $attr = null) {        
+        $data = get_personnages($id, $attr);
+        $personnages = $data['personnages'];
+        $positions = $data['positions'];
+        echo '<script>';
+        echo 'const personnages = ' . json_encode($personnages) . ';';
+        echo 'const positions = ' . json_encode($positions) . ';';
+        echo '</script>';
+    
+        // var_dump($personnages);
+        // var_dump($positions);
+    
         $stockageImages = '/jdr/img/personnages/';
         $imgDiv = get_url('base') . $stockageImages;
 
-        echo '<script>';
-        echo 'const personnages = ' . json_encode($personnages) . ';';
-        echo '</script>';
-
-        foreach ($personnages as $personnage) {
-            $id = $personnage['id'];
-            $nom = $personnage['nom'];
-            $classes = get_css($nom);
-
-            $url = get_url('/personnage/' . urlencode(strtolower($nom)));
-            //var_dump($personnages);
-            //echo '<br>';
-            $data = $personnage['position'];
-            //var_dump($data);
-            //echo '<br>';
-            $urlImage = $data['image'];
-            //print_r($classes);
-            //echo '<br>';
-            $image = str_replace('../', $imgDiv, $urlImage);
-            //print_r($image);
-            //echo '<br>';
-            $hover = str_replace('Min', 'Hover', $image);
-            //print_r($hover);
-            //echo '<br>';
-            $classes_css = str_replace(' ', '.', $classes);
-            //print_r($classes_css);
-            //echo '<br>';
-
-            $dataCSS = [
-                'classe' => $classes_css,
-                'image' => $image,
-                'imageHover' => $hover,
-                'top' => $data['top'],
-                'left' => $data['left'],
-                'height' => $data['height'],
-                'width' => $data['width'],
-                'scaling' => $data['scaling'],
-                'zIndex' => $data['zIndex'],
-            ];
-
-            $codeCSS = "
-                .{$dataCSS['classe']} {
-                    background-image: {$dataCSS['image']};
-                    top: {$dataCSS['top']}%;
-                    left: {$dataCSS['left']}%;
-                    width: calc({$dataCSS['width']} * 50px);
-                    height: calc({$dataCSS['height']} * 80px);
-                    z-index: {$dataCSS['zIndex']};
+        switch ($attr) {
+            case 'emplacement':            
+                foreach ($personnages as $index => $personnage) {
+                    $id = $personnage->getIdPersonnage();
+                    $slug = $personnage->getSlugPersonnage();
+                    $classes = get_css($personnage->getNomPersonnage());
+            
+                    $url = get_url('/personnage/' . $slug);
+                    $position = $positions[$index];
+                    $urlImage = $position->getImage();
+                    $image = str_replace('../', $imgDiv, $urlImage);
+                    $hover = str_replace('Min', 'Hover', $image);
+                    $classes_css = str_replace(' ', '.', $classes);
+            
+                    $dataCSS = [
+                        'classe' => $classes_css,
+                        'image' => $image,
+                        'imageHover' => $hover,
+                        'top' => $position->getTop(),
+                        'left' => $position->getLeft(),
+                        'height' => $position->getHeight(),
+                        'width' => $position->getWidth(),
+                        'scaling' => $position->getScaling(),
+                        'zIndex' => $position->getZIndex(),
+                    ];
+            
+                    $codeCSS = "
+                        .{$dataCSS['classe']} {
+                            background-image: {$dataCSS['image']};
+                            top: {$dataCSS['top']}%;
+                            left: {$dataCSS['left']}%;
+                            width: calc({$dataCSS['width']} * 50px);
+                            height: calc({$dataCSS['height']} * 80px);
+                            z-index: {$dataCSS['zIndex']};
+                        }
+            
+                        .{$dataCSS['classe']}:hover {
+                            background-image: {$dataCSS['imageHover']};
+                            transform: scale({$dataCSS['scaling']});
+                        }
+                    ";
+            
+                    echo '<a href="' . $url . '">';
+                    echo "<style>{$codeCSS}</style>";
+                    echo '<div id="' . $id . '" class="' . $classes . '"></div>';
+                    echo '</a>';
                 }
-        
-                .{$dataCSS['classe']}:hover {
-                    background-image: {$dataCSS['imageHover']};
-                    transform: scale({$dataCSS['scaling']});
-                }
-            ";
+                break;
+                case null:
+                    switch ($id) {
+                        case is_int($id):
+                            $personnage = $personnages[0];
+                            $position = $positions[0];
+                            echo '<h1>' . $personnage->getNomPersonnage() . '</h1>';
+                            echo '<div id="fonctions">';
+                            echo '<h2>' . $personnage->getTitrePersonnage() . '</h2>';
+                            echo '<h3>' . $personnage->getRolePersonnage() . '</h3>';
+                            echo '</div>';
+                            echo '<p>' . $personnage->getDescriptionPersonnage() . '</p>';
+                            echo '<img id="infosModif" src="../../divers/img/info.png" alt="informations">';
+                            echo '<button id="modifier" type="button" data-id="' . $id . '">Modifier la description</button>';
+                            echo '<div id="bgConseil"></div>';
+                            echo '<div id="imageConseil" class="' . $personnage->getSlugPersonnage() . '" onclick="fullscreenCharacter()"></div>';
+                            break;
+                        case is_string($id):
+                            $personnage = $personnages[0];
+                            $position = $positions[0];
+                            $classe = $personnage->getSlugPersonnage();
 
-            echo '<a href="' . $url . '">';
-            echo "<style>{$codeCSS}</style>";
-            echo '<div id="' . $id . '" class="' . $classes . '"></div>';
-            echo '</a>';
+                            echo '<h1>' . $personnage->getNomPersonnage() . '</h1>';
+                            echo '<div id="fonctions">';
+                            echo '<h2>' . $personnage->getTitrePersonnage() . '</h2>';
+                            echo '<h3>' . $personnage->getRolePersonnage() . '</h3>';
+                            echo '</div>';
+                            echo '<p>' . $personnage->getDescriptionPersonnage() . '</p>';
+                            echo '<img id="infosModif" src="../../divers/img/info.png" alt="informations">';
+                            echo '<button id="modifier" type="button" data-slug="' . $id . '">Modifier la description</button>';
+                            echo '<div id="bgConseil"></div>';
+
+                            echo '<div id="imageConseil" class="' . $classe . '">';
+                            
+                            $urlImage = $position->getImage();
+                            $image = str_replace('../', $imgDiv, $urlImage);
+                            $img = str_replace('Min', '', $image);
+                    
+                            $codeCSS = "
+                                .{$classe} {
+                                    background-image: {$img};
+                                }
+                            ";
+                            echo "<style>{$codeCSS}</style></div>";
+                            break;
+                    }
+                    break;
+                break;
         }
     }
+    
+    
+    
 
     function css_personnages() {
 

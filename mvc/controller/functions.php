@@ -17,6 +17,9 @@ function assets($asset, $class) {
                 case 'emplacement':
                     echo '<script src="' . get_url('/assets/conseil.bundle.js') . '"></script>';
                     break;
+                case 'personnage':
+                    echo '<script src="' . get_url('/assets/personnage.bundle.js') . '"></script>';
+                    break;
                 case 'annexe':
                     echo '<script src="' . get_url('/assets/annexe.bundle.js') . '"></script>';
                     break;

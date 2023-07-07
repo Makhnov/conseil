@@ -1,11 +1,12 @@
 <?php
     // Classe Personnage
-    // Attributs : id, nom, titre, role, description, id_localite, id_emplacement
+    // Attributs : id, nom, slug, titre, role, description, id_localite, id_emplacement
     class Personnage {
         
         // ATTRIBUTS //
         private int $id;
         private string $nom;
+        private ?string $slug;
         private ?string $titre;
         private ?string $role;
         private ?string $description;
@@ -13,9 +14,10 @@
         private ?int $id_emplacement;
 
         // CONSTRUCTEUR //
-        public function __construct(int $id, string $nom, ?string $titre, ?string $role, ?string $description, ?int $id_localite, ?int $id_emplacement) {
+        public function __construct(int $id, string $nom, ?string $slug, ?string $titre, ?string $role, ?string $description, ?int $id_localite, ?int $id_emplacement) {
             $this->id = $id;
             $this->nom = $nom;
+            $this->slug = $slug;
             $this->titre = $titre;
             $this->role = $role;
             $this->description = $description;
@@ -29,6 +31,9 @@
         }
         public function getNomPersonnage(): string {
             return $this->nom;
+        }
+        public function getSlugPersonnage(): ?string {
+            return $this->slug;
         }
         public function getTitrePersonnage(): ?string {
             return $this->titre;
@@ -50,6 +55,7 @@
             return [
                 'id' => $this->id,
                 'nom' => $this->nom,
+                'slug' => $this->slug,
                 'titre' => $this->titre,
                 'role' => $this->role,
                 'description' => $this->description,
@@ -64,6 +70,9 @@
         }
         public function setNomPersonnage(string $nom): void {
             $this->nom = $nom;
+        }
+        public function setSlugPersonnage(?string $slug): void {
+            $this->slug = $slug;
         }
         public function setTitrePersonnage(?string $titre): void {
             $this->titre = $titre;

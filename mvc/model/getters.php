@@ -10,7 +10,8 @@
 
         // Récupération des données de la table Personnage
         $personnages = array();
-
+        $positions = array();
+        
         if ($attr === 'localite') {
             // Récupération des personnages liés à l'id_localite donné
             $requete = $PDO->prepare("SELECT personnage.*, position.* FROM personnage LEFT JOIN position ON personnage.id = position.id_personnage WHERE personnage.id_localite = :id");
@@ -18,13 +19,109 @@
             $requete->execute();
         } elseif ($attr === 'emplacement') {
             // Récupération des personnages liés à l'id_emplacement donné
-            $requete = $PDO->prepare("SELECT personnage.*, position.* FROM personnage LEFT JOIN position ON personnage.id = position.id_personnage WHERE personnage.id_emplacement = :id");
+            $requete = $PDO->prepare("
+                SELECT 
+                    personnage.id, 
+                    personnage.nom, 
+                    personnage.slug, 
+                    personnage.titre, 
+                    personnage.role, 
+                    personnage.description, 
+                    personnage.id_localite AS personnage_id_localite, 
+                    personnage.id_emplacement AS personnage_id_emplacement,
+                    position.id, 
+                    position.top, 
+                    position.left, 
+                    position.height, 
+                    position.width, 
+                    position.scaling, 
+                    position.zIndex, 
+                    position.image,
+                    position.id_localite AS position_id_localite,
+                    position.id_personnage AS position_id_personnage,
+                    position.id_region AS position_id_region,
+                    position.id_emplacement AS position_id_emplacement
+                FROM 
+                    personnage 
+                LEFT JOIN 
+                    position 
+                ON 
+                    personnage.id = position.id_personnage 
+                WHERE 
+                    personnage.id_emplacement = :id
+            ");
             $requete->bindParam(':id', $id, PDO::PARAM_INT);
             $requete->execute();
         } elseif ($id !== null) {
-            // Récupération du personnage avec l'id donné
-            $requete = $PDO->prepare("SELECT personnage.*, position.* FROM personnage LEFT JOIN position ON personnage.id = position.id_personnage WHERE personnage.id = :id");
-            $requete->bindParam(':id', $id, PDO::PARAM_INT);
+            if (is_numeric($id)) {
+                // Recherche par ID
+                $requete = $PDO->prepare("
+                    SELECT 
+                        personnage.id, 
+                        personnage.nom, 
+                        personnage.slug, 
+                        personnage.titre, 
+                        personnage.role, 
+                        personnage.description, 
+                        personnage.id_localite AS personnage_id_localite, 
+                        personnage.id_emplacement AS personnage_id_emplacement,
+                        position.id, 
+                        position.top, 
+                        position.left, 
+                        position.height, 
+                        position.width, 
+                        position.scaling, 
+                        position.zIndex, 
+                        position.image,
+                        position.id_localite AS position_id_localite,
+                        position.id_personnage AS position_id_personnage,
+                        position.id_region AS position_id_region,
+                        position.id_emplacement AS position_id_emplacement
+                    FROM 
+                        personnage 
+                    LEFT JOIN 
+                        position 
+                    ON 
+                        personnage.id = position.id_personnage 
+                    WHERE 
+                        personnage.id = :id
+                ");
+            } else {
+                // Recherche par slug
+                $requete = $PDO->prepare("
+                    SELECT 
+                        personnage.id, 
+                        personnage.nom, 
+                        personnage.slug, 
+                        personnage.titre, 
+                        personnage.role, 
+                        personnage.description, 
+                        personnage.id_localite AS personnage_id_localite, 
+                        personnage.id_emplacement AS personnage_id_emplacement,
+                        position.id, 
+                        position.top, 
+                        position.left, 
+                        position.height, 
+                        position.width, 
+                        position.scaling, 
+                        position.zIndex, 
+                        position.image,
+                        position.id_localite AS position_id_localite,
+                        position.id_personnage AS position_id_personnage,
+                        position.id_region AS position_id_region,
+                        position.id_emplacement AS position_id_emplacement
+                    FROM 
+                        personnage 
+                    LEFT JOIN 
+                        position 
+                    ON 
+                        personnage.id = position.id_personnage 
+                    WHERE 
+                        personnage.slug = :slug
+                ");
+                $requete->bindParam(':slug', $id, PDO::PARAM_STR);
+            }
+        
             $requete->execute();
         } else {
             // Récupération de tous les personnages
@@ -33,28 +130,37 @@
         }
 
         while ($row = $requete->fetch(PDO::FETCH_ASSOC)) {
-            $personnage = array(
-                'id' => $row['id'],
-                'nom' => $row['nom'],
-                'titre' => $row['titre'],
-                'role' => $row['role'],
-                'description' => $row['description'],
-                'positionId' => $row['id'],
-                'position' => array(
-                    'id' => $row['id'],
-                    'top' => $row['top'],
-                    'left' => $row['left'],
-                    'height' => $row['height'],
-                    'width' => $row['width'],
-                    'scaling' => $row['scaling'],
-                    'zIndex' => $row['zIndex'],
-                    'image' => $row['image']
-                )
+            $personnage = new Personnage(
+                intval($row['id']),
+                $row['nom'],
+                $row['slug'],
+                $row['titre'],
+                $row['role'],
+                $row['description'],
+                intval($row['personnage_id_localite']),
+                intval($row['personnage_id_emplacement'])
+            );      
+        
+            $position = new Position(
+                intval($row['id']),
+                floatval($row['top']),
+                floatval($row['left']),
+                floatval($row['height']),
+                floatval($row['width']),
+                $row['scaling'],
+                $row['zIndex'],
+                $row['image'],
+                is_null($row['position_id_localite']) ? null : intval($row['position_id_localite']),
+                is_null($row['position_id_personnage']) ? null : intval($row['position_id_personnage']),
+                is_null($row['position_id_region']) ? null : intval($row['position_id_region']),
+                is_null($row['position_id_emplacement']) ? null : intval($row['position_id_emplacement'])
             );
+        
             array_push($personnages, $personnage);
+            array_push($positions, $position);
         }
-
-        return $personnages;
+        
+        return ['personnages' => $personnages, 'positions' => $positions];
     }
 
 

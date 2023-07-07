@@ -1,11 +1,12 @@
 console.log('classes.js');
 // Classe Personnage
-// Attributs : id, nom, titre, role, description, id_localite, id_emplacement
+// Attributs : id, nom, slug, titre, role, description, id_localite, id_emplacement
 class Personnage {
     // CONSTRUCTEUR
-    constructor(id, nom, titre, role, description, id_localite, id_emplacement) {
+    constructor(id, nom, slug, titre, role, description, id_localite, id_emplacement) {
         this.id = id;
         this.nom = nom;
+        this.slug = slug;
         this.titre = titre;
         this.role = role;
         this.description = description;
@@ -20,6 +21,10 @@ class Personnage {
 
     getNomPersonnage() {
         return this.nom;
+    }
+
+    getSlugPersonnage() {
+        return this.slug;
     }
 
     getTitrePersonnage() {
@@ -46,6 +51,7 @@ class Personnage {
         return {
             id: this.id,
             nom: this.nom,
+            slug: this.slug,
             titre: this.titre,
             role: this.role,
             description: this.description,
@@ -61,6 +67,10 @@ class Personnage {
 
     setNomPersonnage(nom) {
         this.nom = nom;
+    }
+
+    setSlugPersonnage(slug) {
+        this.slug = slug;
     }
 
     setTitrePersonnage(titre) {

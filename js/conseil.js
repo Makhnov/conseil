@@ -1,18 +1,9 @@
 console.log('conseil.js');
 //console.log(typeof resize);
 
-let obj;
-let editActive = false; // Booléen qui permet de vérifier si l'utilisateur est en train d'éditer une description ou non. Fonction: edition()
-let fullscreenActive = false; // Booléen qui permet de vérifier si le personnage est en plein écran ou non. Fonction:  fullscreenCharacter()
-let resizePage = false; // cf ligne 12
-
 const scene = document.getElementById("scene");
 const box = document.getElementById('salleDuConseil');
 const body = document.getElementsByTagName('body')[0];
-
-if (document.getElementsByClassName('resize').length > 0) { // On vérifie si on a load une page qui nécessite un resize (salle du conseil, etc.)
-    resizePage = true;
-}
 
 function resizeEmplacement() { // Fonction qui permet de redimensionner un groupe de personnages en fonction de l'écran de l'utilisateur
     console.log('resize');
@@ -39,7 +30,6 @@ function resizeEmplacement() { // Fonction qui permet de redimensionner un group
 window.addEventListener('resize', debounce(resizeEmplacement, 300));
 
 resizeEmplacement();
-
 
 /* REQCONSEIL
 function reqConseil(bool) {
@@ -174,77 +164,6 @@ function getConseil() { //Fonction qui récupère les données de la BDD au char
         reqConseil(true);
     } else {
         reqConseil(false);
-    }
-}
-*/
-
-/* PERSONNAGE
-function edition() { // Fonction qui permet de modifier le style de la page lors de l'édition
-    const form = document.getElementsByTagName('form')[0];
-    const textArea = document.getElementById('inputText');
-    const edit = document.getElementById('edition');
-    const logo = document.getElementById('sceneProfil');
-    const val = document.getElementById('validation');
-    const nav1 = document.getElementsByTagName('nav')[0];
-    const nav2 = document.getElementsByTagName('nav')[1];
-
-    editActive = !editActive;
-
-    if (editActive) {
-        edit.textContent = "Annuler";
-        edit.style.backgroundColor = "rgba(175, 0, 0, 0.25)";
-        edit.style.visibility = "visible";
-        form.style.clipPath = "inset(0 0 0 0)";
-        logo.style.filter = "grayscale(1.25) blur(1px)";
-        val.style.opacity = "1";
-        nav1.style.transform = "rotateX(180deg)";
-        nav2.style.transform = "rotateX(0deg)"
-
-    } else {
-        edit.textContent = "Editer";
-        edit.style.backgroundColor = "rgba(0, 128, 0, 0.25)";
-        edit.style.visibility = "hidden";
-        logo.style.clipPath = "inset(0 0 0 0)";
-        form.style.clipPath = "inset(50% 50% 50% 50%)";
-        logo.style.filter = "none";
-        val.style.opacity = "0";
-        nav2.style.transform = "rotateX(180deg)";
-        nav1.style.transform = "rotateX(0deg)"
-    }
-}
-
-function validation() {  // Fonction qui permet de valider le formulaire (Methode GET) et lance index2.php
-    const val = document.getElementById('validationPhp');
-    const form = document.getElementsByTagName('textarea')[0];
-    let str = form.value;
-    str = str.replace(/'/g, '’'); // Les ' interfèrent avec les commandes php, on utilise les expressions régulières (regex) les remplacer par des ’
-    form.value = str;
-    val.click();
-}
-
-function fullscreenCharacter() { // Fonction qui permet de lancer un zoom sur les personnages afin de les mettre en "plein écran"
-
-    const perso = document.getElementById('imageConseil');
-    const chateau = document.getElementById('bgConseil');
-
-    fullscreenActive = !fullscreenActive;
-
-    if (fullscreenActive) {
-        perso.style.height = "100%";
-        perso.style.width = "100%";
-        perso.style.setProperty('top', '0', 'important');
-        perso.style.setProperty('left', '0', 'important');
-        chateau.style.opacity = "1";
-        chateau.style.filter = "brightness(1.5) contrast(.5) blur(2px)";
-        chateau.style.backgroundSize = "cover";
-    } else {
-        perso.style.top = "38%";
-        perso.style.left = "40%";
-        perso.style.height = "60%";
-        perso.style.width = "50%";
-        chateau.style.opacity = "1";
-        chateau.style.filter = "brightness(1)";
-        chateau.style.backgroundSize = "cover";
     }
 }
 */
