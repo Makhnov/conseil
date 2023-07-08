@@ -1,13 +1,13 @@
 RewriteEngine On
 
-# Règle pour /
-RewriteRule ^$ /jdr/mvc/vue/accueil.php [L]
+# Règle pour /jdr/
+RewriteRule ^jdr/$ /jdr/mvc/vue/accueil.php [L]
 
 # Règle pour /localite/
-RewriteRule ^localite/([^/]+)/?$ /jdr/mvc/vue/localite.php?localite=$1 [L]
+RewriteRule ^jdr/localite/([^/]+)/?$ /jdr/mvc/vue/localite.php?localite=$1 [L]
 
 # Règle pour /localite/emplacement/
-RewriteRule ^localite/([^/]+)/emplacement/([^/]+)/?$ /jdr/mvc/vue/emplacement.php?localite=$1&emplacement=$2 [L]
+RewriteRule ^jdr/localite/([^/]+)/emplacement/([^/]+)/?$ /jdr/mvc/vue/emplacement.php?localite=$1&emplacement=$2 [L]
 
 # Règle pour /personnage/
-RewriteRule ^personnage/([^/]+)/?$ /jdr/mvc/vue/personnage.php?personnage=$1 [L]
+RewriteRule ^jdr/personnage/([^/]+)/?$ /jdr/mvc/vue/personnage.php?personnage=$1 [L]

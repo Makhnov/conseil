@@ -129,7 +129,7 @@ get_header($class);
 
         <section class="container">
             <div class="feerune">
-                <img id="background" src="./img/lowRes.jpg" alt="Image légère">
+                <img id="background" src="https://makh.fr/divers/img/lowRes.jpg" alt="Image légère">
                 <svg id="data" xmlns="http://www.w3.org/2000/svg" width="2550" height="1650" viewBox="0 0 10200 6600">
                 <?php afficher_regions() ?>
                 </svg>

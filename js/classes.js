@@ -1,4 +1,5 @@
-console.log('classes.js');
+//console.log('classes.js');
+
 // Classe Personnage
 // Attributs : id, nom, slug, titre, role, description, id_localite, id_emplacement
 class Personnage {

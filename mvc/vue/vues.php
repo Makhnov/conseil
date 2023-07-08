@@ -33,8 +33,7 @@
         // var_dump($personnages);
         // var_dump($positions);
     
-        $stockageImages = '/jdr/img/personnages/';
-        $imgDiv = get_url('base') . $stockageImages;
+        $imgDiv = 'https://makh.fr/divers/img/personnages/';
 
         switch ($attr) {
             case 'emplacement': 
@@ -109,7 +108,7 @@
                             echo '<h3>' . $personnage->getRolePersonnage() . '</h3>';
                             echo '</div>';
                             echo '<p>' . $personnage->getDescriptionPersonnage() . '</p>';
-                            echo '<img id="infosModif" src="../../divers/img/info.png" alt="informations">';
+                            echo '<img id="infosModif" src="https://makh.fr/divers/img/info.png" alt="informations">';
                             echo '<button id="modifier" type="button" data-id="' . $id . '">Modifier la description</button>';
                             echo '<div id="bgConseil"></div>';
                             echo '<div id="imageConseil" class="' . $personnage->getSlugPersonnage() . '" onclick="fullscreenCharacter()"></div>';
@@ -122,7 +121,7 @@
                             echo '<h3>' . $personnage->getRolePersonnage() . '</h3>';
                             echo '</div>';
                             echo '<p>' . $personnage->getDescriptionPersonnage() . '</p>';
-                            echo '<img id="infosModif" src="../../divers/img/info.png" alt="informations">';
+                            echo '<img id="infosModif" src="https://makh.fr/divers/img/info.png" alt="informations">';
                             echo '<button id="modifier" type="button" data-slug="' . $id . '">Modifier la description</button>';
                             echo '<div id="bgConseil"></div>';
 

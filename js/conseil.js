@@ -1,4 +1,4 @@
-console.log('conseil.js');
+//console.log('conseil.js');
 //console.log(typeof resize);
 
 const scene = document.getElementById("scene");

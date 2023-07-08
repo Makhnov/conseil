@@ -1,5 +1,5 @@
 <?php
-    include __DIR__ . '/../../config.php';
+    include '../../config.php';
 
     function connect() {
         $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME; 

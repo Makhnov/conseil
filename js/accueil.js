@@ -1,4 +1,4 @@
-console.log('accueil.js');
+//console.log('accueil.js');
 const main = document.querySelector('main.content');
 
 const container = document.querySelector('section.container');
@@ -63,7 +63,7 @@ function init() {
     console.log('startloading');
     // Appel de la fonction asynchrone après les autres fonctions
     imgAsync().then(() => {
-        background.src = "./img/highRes.jpg";
+        background.src = "https://makh.fr/divers/img/highRes.jpg";
         console.log('High-resolution image loaded');
         // Effectuez ici les opérations supplémentaires que vous souhaitez effectuer après le chargement de l'image haute résolution.
     }).catch((error) => {
@@ -74,7 +74,7 @@ function init() {
 function imgAsync() {
     return new Promise((resolve, reject) => {
         let Newbackground = new Image();
-        Newbackground.src = "./img/highRes.jpg";
+        Newbackground.src = "https://makh.fr/divers/img/highRes.jpg";
         Newbackground.onload = () => resolve();
         Newbackground.onerror = (error) => reject(error);
     });
@@ -260,14 +260,6 @@ function originalData() {
     }
 }
 
-
-container.addEventListener('contextmenu', function (event) {
-    event.preventDefault(); // Empêche l'affichage du menu contextuel par défaut
-    console.log('scrollTop:', container.scrollTop / yqc);
-    console.log('scrollLeft:', container.scrollLeft / xqc);
-});
-
-
 function resize() { // Fonction qui permet de redimensionner un groupe de personnages en fonction de l'écran de l'utilisateur
     //console.log('resize');
 
@@ -370,6 +362,12 @@ LOCALITE.forEach(function (loc) {
         loc.classList.remove('survol');
     });
     loc.addEventListener('click', () => {//PARTIE PERSONNAGE (jdr)
-        window.location.href = "http://localhost/jdr/localite/" + loc.id;
+        window.location.href = "https://makh.fr/jdr/localite/" + loc.id;
     });
 });
+
+/*
+container.addEventListener('contextmenu', function (event) {
+    event.preventDefault(); // Empêche l'affichage du menu contextuel par défaut
+});
+*/

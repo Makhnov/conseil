@@ -1,4 +1,4 @@
-console.log('personnage.js');
+//console.log('personnage.js');
 
 let personnage = new Personnage(
     window.personnage.id,

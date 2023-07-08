@@ -1,4 +1,5 @@
-console.log(personnages);
+//console.log(personnages);
+
 /*
 const persosDivs = document.querySelectorAll('main > div > div > a > div');
 const stockageImages = '/jdr/img/personnages/';
